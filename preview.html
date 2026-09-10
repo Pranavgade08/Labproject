@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LabTrack – MERN Live Application Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+      --bg-main: #f8fafc;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --border-color: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-light: #dcfce7;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-primary);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Preview Header Bar */
+    .preview-banner {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      color: white;
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      border-bottom: 2px solid #3b82f6;
+    }
+    .preview-selector {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .preview-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .preview-btn:hover, .preview-btn.active {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    /* Navigation */
+    .header {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.875rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+    .logo-text {
+      font-size: 1.35rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #0f172a, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: var(--font-heading);
+    }
+    .logo-subtitle { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+    .nav-links { display: flex; align-items: center; gap: 1rem; }
+    .nav-link {
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all 0.2s;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary);
+      background-color: var(--primary-light);
+    }
+
+    .main-content {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 1.5rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+    .card-subtitle { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .stat-value { font-size: 1.85rem; font-weight: 800; font-family: var(--font-heading); }
+    .stat-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-success { background: #10b981; color: white; }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-warning { background: #f59e0b; color: white; }
+
+    /* Tables */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: white;
+    }
+    .modern-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+    .modern-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .modern-table td { padding: 1rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; color: #334155; }
+    .modern-table tr:hover td { background: #f8fafc; }
+
+    /* Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .status-pending { background: #fef3c7; color: #b45309; }
+    .status-progress { background: #e0f2fe; color: #0369a1; }
+    .status-resolved { background: #dcfce7; color: #15803d; }
+    .status-online { background: #dcfce7; color: #15803d; }
+    .status-offline { background: #fee2e2; color: #b91c1c; }
+
+    /* Forms */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; }
+    .form-control {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.925rem;
+      font-family: var(--font-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+    }
+
+    .hidden-view { display: none !important; }
+    .footer {
+      background: white;
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live Switcher Bar -->
+  <div class="preview-banner">
+    <div style="font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+      <span style="background: #10b981; width: 10px; height: 10px; border-radius: 50%; display: inline-block;"></span>
+      MERN Stack Active Demo Preview
+    </div>
+    <div class="preview-selector">
+      <span>Jump to view:</span>
+      <button class="preview-btn active" onclick="switchView('home')">🏠 Home</button>
+      <button class="preview-btn" onclick="switchView('student-dash')">🎓 Student Dashboard</button>
+      <button class="preview-btn" onclick="switchView('report-issue')">➕ Report Issue</button>
+      <button class="preview-btn" onclick="switchView('admin-dash')">🛡️ Admin Console</button>
+      <button class="preview-btn" onclick="switchView('monthly-reports')">📊 Reports</button>
+      <button class="preview-btn" onclick="switchView('network')">🖥️ Network Mgmt</button>
+      <button class="preview-btn" onclick="switchView('devices')">📋 Devices</button>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="header">
+    <div class="logo-container" onclick="switchView('home')">
+      <div class="logo-badge">LT</div>
+      <div>
+        <div class="logo-text">LabTrack</div>
+        <div class="logo-subtitle">Smart Lab Management (MERN)</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <button class="nav-link active" id="nav-home" onclick="switchView('home')">Home</button>
+      <button class="nav-link" id="nav-student-dash" onclick="switchView('student-dash')">Dashboard</button>
+      <button class="nav-link" id="nav-report-issue" onclick="switchView('report-issue')">Report Issue</button>
+      <button class="nav-link" id="nav-admin-dash" onclick="switchView('admin-dash')">Admin</button>
+      <button class="nav-link" id="nav-monthly-reports" onclick="switchView('monthly-reports')">Reports</button>
+      <button class="nav-link" id="nav-network" onclick="switchView('network')">Network</button>
+      <button class="nav-link" id="nav-devices" onclick="switchView('devices')">Devices</button>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <span style="background: #f1f5f9; padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600;">
+        Hello, PRN001 (John Doe)
+      </span>
+      <span style="background: #ef4444; color: white; border-radius: 9999px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700;">2 Pending</span>
+    </div>
+  </header>
+
+  <!-- VIEW 1: HOME PAGE -->
+  <div id="view-home" class="main-content">
+    <section style="padding: 3rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; align-items: center;">
+      <div>
+        <span style="background: #dbeafe; color: #1e40af; padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 700; display: inline-block; margin-bottom: 1rem;">
+          ✨ Smart College Solution
+        </span>
+        <h1 style="font-size: 2.5rem; line-height: 1.2; margin-bottom: 1rem; font-family: var(--font-heading);">
+          Modern Computer Lab Reporting & Remote Management
+        </h1>
+        <p style="font-size: 1.1rem; color: #475569; margin-bottom: 1.75rem;">
+          Report lab issues instantly with camera evidence. Track resolution transparently. Control and monitor lab network workstations effortlessly.
+        </p>
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn btn-primary" onclick="switchView('student-dash')">Student Portal &rarr;</button>
+          <button class="btn btn-secondary" onclick="switchView('admin-dash')">Admin Console</button>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 20px; padding: 2rem; color: white; box-shadow: var(--shadow-lg);">
+        <h3 style="color: #38bdf8; margin-bottom: 1rem; font-family: var(--font-heading);">Live System Status</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div style="background: #1e293b; padding: 1rem; border-radius: 10px; border: 1px solid #334155;">
+            <div style="font-size: 0.8rem; color: #94a3b8;">Active Labs</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #38bdf8;">4 Labs</div>
+          </div>
+          <div style="background: #1e293b; padding: 1rem; border-radius: 10px; border: 1px solid #334155;">
+            <div style="font-size: 0.8rem; color: #94a3b8;">Online PCs</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #4ade80;">128 PCs</div>
+          </div>
+          <div style="background: #1e293b; padding: 1rem; border-radius: 10px; border: 1px solid #334155;">
+            <div style="font-size: 0.8rem; color: #94a3b8;">Avg Resolution</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #facc15;">1.2 Days</div>
+          </div>
+          <div style="background: #1e293b; padding: 1rem; border-radius: 10px; border: 1px solid #334155;">
+            <div style="font-size: 0.8rem; color: #94a3b8;">Status</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #c084fc;">Active</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- VIEW 2: STUDENT DASHBOARD -->
+  <div id="view-student-dash" class="main-content hidden-view">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 class="card-title">My Submitted Issues</h2>
+          <p class="card-subtitle">You have submitted 3 issues</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Report</button>
+          <button class="btn btn-primary" onclick="switchView('report-issue')">➕ Report New Issue</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Lab / System</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Days</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#00101</strong></td>
+              <td>Lab 1 <small style="display:block; color:#0284c7;">PC-01</small></td>
+              <td>Hardware Issue</td>
+              <td>Monitor flickering and blacking out intermittently during lab sessions.</td>
+              <td><span class="status-badge status-pending">Pending</span></td>
+              <td>2 days</td>
+              <td>Sep 8, 2026</td>
+            </tr>
+            <tr>
+              <td><strong>#00102</strong></td>
+              <td>Lab 2 <small style="display:block; color:#0284c7;">PC-15</small></td>
+              <td>Software Issue</td>
+              <td>VS Code compiler error; PATH variable missing.</td>
+              <td><span class="status-badge status-progress">In Progress</span></td>
+              <td>1 day</td>
+              <td>Sep 9, 2026</td>
+            </tr>
+            <tr>
+              <td><strong>#00103</strong></td>
+              <td>Lab 3 <small style="display:block; color:#0284c7;">PC-08</small></td>
+              <td>Network Issue</td>
+              <td>Ethernet connector damaged, network drops.</td>
+              <td><span class="status-badge status-resolved">Resolved</span></td>
+              <td>1 day</td>
+              <td>Sep 7, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 3: REPORT ISSUE -->
+  <div id="view-report-issue" class="main-content hidden-view">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <h2 class="card-title">Report Lab Issue</h2>
+        <p class="card-subtitle">Submit a detailed complaint with photo evidence</p>
+      </div>
+
+      <form onsubmit="alert('Report submitted successfully! (MERN Demo)'); switchView('student-dash'); return false;">
+        <div class="form-group">
+          <label class="form-label">Student PRN</label>
+          <input type="text" class="form-control" value="PRN001" readonly disabled style="background:#f1f5f9;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Lab *</label>
+            <select class="form-control">
+              <option>Lab 1</option>
+              <option>Lab 2</option>
+              <option>Lab 3</option>
+              <option>Lab 4</option>
+              <option>Computer Center</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">System Number</label>
+            <input type="text" class="form-control" placeholder="e.g. PC-01">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Issue Type *</label>
+          <select class="form-control">
+            <option>Hardware Issue</option>
+            <option>Software Issue</option>
+            <option>Network Issue</option>
+            <option>Peripheral Issue</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea class="form-control" rows="4" placeholder="Describe the issue in detail..." required></textarea>
+        </div>
+        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+          <label class="form-label">Photo Evidence</label>
+          <div style="display:flex; gap: 0.5rem;">
+            <input type="file" class="form-control">
+            <button type="button" class="btn btn-secondary" onclick="alert('Live WebRTC Camera Modal triggered!')">📸 Cam</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Issue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- VIEW 4: ADMIN DASHBOARD -->
+  <div id="view-admin-dash" class="main-content hidden-view">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <div>
+        <h1 style="font-size: 2rem; font-family: var(--font-heading);">Admin Dashboard</h1>
+        <p style="color: #64748b;">Manage and resolve all laboratory workstation complaints</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <button class="btn btn-secondary" style="background:#10b981; color:white;" onclick="alert('Exporting CSV from /api/issues/export-csv')">📥 Export CSV</button>
+        <button class="btn btn-primary" onclick="alert('Refreshed from MongoDB')">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+        <div class="stat-title">Pending Issues</div>
+        <div class="stat-value" style="color: #f59e0b;">1</div>
+        <div class="stat-desc">Awaiting action</div>
+      </div>
+      <div class="stat-card" style="border-left: 4px solid #3b82f6;">
+        <div class="stat-title">In Progress</div>
+        <div class="stat-value" style="color: #3b82f6;">1</div>
+        <div class="stat-desc">Being repaired</div>
+      </div>
+      <div class="stat-card" style="border-left: 4px solid #10b981;">
+        <div class="stat-title">Resolved</div>
+        <div class="stat-value" style="color: #10b981;">1</div>
+        <div class="stat-desc">Fixed successfully</div>
+      </div>
+      <div class="stat-card" style="border-left: 4px solid #06b6d4;">
+        <div class="stat-title">Online PCs</div>
+        <div class="stat-value" style="color: #06b6d4;">2 / 3</div>
+        <div class="stat-desc">Active LAN nodes</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div class="table-responsive" style="border: none;">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Student</th>
+              <th>Lab / System</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Days</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#00101</strong></td>
+              <td>John Doe <small style="display:block; color:#64748b;">PRN001</small></td>
+              <td>Lab 1 (PC-01)</td>
+              <td>Hardware Issue</td>
+              <td>Monitor flickering issue</td>
+              <td><span class="status-badge status-pending">Pending</span></td>
+              <td>2d</td>
+              <td><button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="alert('Update Status Modal')">Update</button></td>
+            </tr>
+            <tr>
+              <td><strong>#00102</strong></td>
+              <td>Jane Smith <small style="display:block; color:#64748b;">PRN002</small></td>
+              <td>Lab 2 (PC-15)</td>
+              <td>Software Issue</td>
+              <td>VS Code compiler PATH error</td>
+              <td><span class="status-badge status-progress">In Progress</span></td>
+              <td>1d</td>
+              <td><button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="alert('Update Status Modal')">Update</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 5: MONTHLY REPORTS -->
+  <div id="view-monthly-reports" class="main-content hidden-view">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <div>
+        <h1 style="font-size: 2rem; font-family: var(--font-heading);">📊 Monthly Issue Reports</h1>
+        <p style="color: #64748b;">Performance & audit metrics for September 2026</p>
+      </div>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print Report</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+      <div class="card">
+        <h3 style="color: #0284c7; margin-bottom: 1rem; font-family: var(--font-heading);">Issues by Laboratory</h3>
+        <div style="margin-bottom: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+            <strong>Lab 1</strong> <span>1 issues (33%)</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 9999px;">
+            <div style="width: 33%; height: 100%; background: #0284c7; border-radius: 9999px;"></div>
+          </div>
+        </div>
+        <div style="margin-bottom: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+            <strong>Lab 2</strong> <span>1 issues (33%)</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 9999px;">
+            <div style="width: 33%; height: 100%; background: #0284c7; border-radius: 9999px;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+            <strong>Lab 3</strong> <span>1 issues (33%)</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 9999px;">
+            <div style="width: 33%; height: 100%; background: #0284c7; border-radius: 9999px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #7c3aed; margin-bottom: 1rem; font-family: var(--font-heading);">Issues by Category</h3>
+        <div style="margin-bottom: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+            <strong>Hardware</strong> <span>1 issues (33%)</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 9999px;">
+            <div style="width: 33%; height: 100%; background: #7c3aed; border-radius: 9999px;"></div>
+          </div>
+        </div>
+        <div style="margin-bottom: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+            <strong>Software</strong> <span>1 issues (33%)</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 9999px;">
+            <div style="width: 33%; height: 100%; background: #7c3aed; border-radius: 9999px;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+            <strong>Network</strong> <span>1 issues (33%)</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 9999px;">
+            <div style="width: 33%; height: 100%; background: #7c3aed; border-radius: 9999px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 6: NETWORK MANAGEMENT -->
+  <div id="view-network" class="main-content hidden-view">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 class="card-title">🖥️ Network Management</h2>
+          <p class="card-subtitle">Detect active LAN computers and manage them remotely</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-primary" onclick="alert('Scanning LAN ARP cache via /api/computers/scan')">🔄 Rescan LAN</button>
+          <button class="btn btn-danger" onclick="alert('Mass Shutdown command sent via /api/computers/shutdown-all')">⚡ Shutdown All PCs</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Hostname</th>
+              <th>IP Address</th>
+              <th>MAC Address</th>
+              <th>Estimated OS</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>LAB1-PC-01</strong></td>
+              <td>192.168.1.101</td>
+              <td><code>00:1A:2B:3C:4D:01</code></td>
+              <td><span class="status-badge status-progress">Windows 11</span></td>
+              <td><span class="status-badge status-online">Online</span></td>
+              <td>
+                <button class="btn btn-danger" style="padding: 3px 8px; font-size: 0.75rem;" onclick="alert('Sending shutdown command to 192.168.1.101')">Shutdown</button>
+                <button class="btn btn-warning" style="padding: 3px 8px; font-size: 0.75rem;" onclick="alert('Sending restart command to 192.168.1.101')">Restart</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>LAB1-PC-02</strong></td>
+              <td>192.168.1.102</td>
+              <td><code>00:1A:2B:3C:4D:02</code></td>
+              <td><span class="status-badge status-progress">Windows 10</span></td>
+              <td><span class="status-badge status-online">Online</span></td>
+              <td>
+                <button class="btn btn-danger" style="padding: 3px 8px; font-size: 0.75rem;" onclick="alert('Sending shutdown command to 192.168.1.102')">Shutdown</button>
+                <button class="btn btn-warning" style="padding: 3px 8px; font-size: 0.75rem;" onclick="alert('Sending restart command to 192.168.1.102')">Restart</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 7: DEVICE MANAGEMENT -->
+  <div id="view-devices" class="main-content hidden-view">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">📋 Device & Asset Management</h2>
+        <p class="card-subtitle">Manage lab designations and inspect installed software catalogs</p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Hostname</th>
+              <th>IP Address</th>
+              <th>MAC Address</th>
+              <th>Lab Designation</th>
+              <th>OS</th>
+              <th>Status</th>
+              <th>Installed Software</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>LAB1-PC-01</strong></td>
+              <td>192.168.1.101</td>
+              <td><code>00:1A:2B:3C:4D:01</code></td>
+              <td><span style="background:#dbeafe; color:#1e40af; padding: 2px 8px; border-radius:4px; font-weight:600;">Lab 1</span></td>
+              <td>Windows 11 Pro</td>
+              <td><span class="status-badge status-online">Online</span></td>
+              <td><button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem;" onclick="alert('Installed Software:\n- VS Code 1.87.0\n- Node.js 20.11.0\n- Google Chrome')">📦 3 apps</button></td>
+              <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:0.8rem;" onclick="alert('Edit Designation Modal')">Edit</button></td>
+            </tr>
+            <tr>
+              <td><strong>LAB2-PC-15</strong></td>
+              <td>192.168.1.115</td>
+              <td><code>00:1A:2B:3C:4D:15</code></td>
+              <td><span style="background:#dbeafe; color:#1e40af; padding: 2px 8px; border-radius:4px; font-weight:600;">Lab 2</span></td>
+              <td>Ubuntu 22.04</td>
+              <td><span class="status-badge status-offline">Offline</span></td>
+              <td><button class="btn btn-secondary" style="padding:2px 6px; font-size:0.75rem;" onclick="alert('Installed Software:\n- GCC\n- Python 3.10')">📦 2 apps</button></td>
+              <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:0.8rem;" onclick="alert('Edit Designation Modal')">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    LabTrack &copy; 2026 MERN Edition • React + Express + MongoDB + Node.js
+  </footer>
+
+  <script>
+    function switchView(viewId) {
+      const views = ['home', 'student-dash', 'report-issue', 'admin-dash', 'monthly-reports', 'network', 'devices'];
+      views.forEach(v => {
+        const el = document.getElementById('view-' + v);
+        const navEl = document.getElementById('nav-' + v);
+        if (el) {
+          if (v === viewId) {
+            el.classList.remove('hidden-view');
+          } else {
+            el.classList.add('hidden-view');
+          }
+        }
+        if (navEl) {
+          if (v === viewId) navEl.classList.add('active');
+          else navEl.classList.remove('active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
